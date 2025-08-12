@@ -1,7 +1,7 @@
-// App.jsx
+// src/components/Counter.jsx
 import React, { useState } from 'react';
 
-// The Counter component is defined directly in this file
+// The Counter component uses the useState hook to manage its count.
 const Counter = () => {
   // 1. Initialize state with a count of 0.
   // `count` is the current state value, and `setCount` is the function to update it.
@@ -38,13 +38,4 @@ const Counter = () => {
   );
 };
 
-// This is the main component that renders the Counter.
-const App = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-purple-100 flex items-start justify-center p-8 font-sans">
-      <Counter />
-    </div>
-  );
-};
-
-export default App;
+export default Counter;
