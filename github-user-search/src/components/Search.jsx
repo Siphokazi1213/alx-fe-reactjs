@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fetchUserData } from '../services/githubService';
+import { fetchUserData } from '../services/githubService.js';
 
 const Search = () => {
   // State for search input, user data, loading status, and error messages.
