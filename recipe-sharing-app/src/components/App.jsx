@@ -1,25 +1,49 @@
 import React, { useState } from 'react';
-import { create } from 'zustand';
 import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom';
+import { create } from 'zustand';
 
-// --- Recipe Data Store (Step 1) ---
-// This store manages the state for our recipes, including adding, updating, and deleting.
-// It has been extended with search and filtering logic.
-const useRecipeStore = create((set, get) => ({
+// --- Zustand Store ---
+// This store now manages recipes, favorites, and recommendations.
+export const useRecipeStore = create((set, get) => ({
   recipes: [
     {
       id: 1,
       title: 'Classic Spaghetti Carbonara',
       description: 'A traditional Italian pasta dish made with eggs, hard cheese, cured pork, and black pepper.',
       ingredients: ['Pasta', 'Eggs', 'Pecorino Romano', 'Guanciale', 'Black Pepper'],
+      category: 'Pasta',
     },
     {
       id: 2,
       title: 'Simple Tomato Soup',
       description: 'A quick and easy tomato soup, perfect for a light lunch or a cozy dinner.',
       ingredients: ['Tomatoes', 'Onion', 'Garlic', 'Vegetable Broth', 'Basil'],
+      category: 'Soup',
+    },
+    {
+      id: 3,
+      title: 'Chicken and Rice Casserole',
+      description: 'A hearty and comforting one-dish meal with chicken, rice, and creamy soup.',
+      ingredients: ['Chicken Breast', 'White Rice', 'Cream of Chicken Soup', 'Onion Powder', 'Salt', 'Pepper'],
+      category: 'Casserole',
+    },
+    {
+      id: 4,
+      title: 'Vegetarian Chili',
+      description: 'A flavorful and filling chili with three types of beans and plenty of vegetables.',
+      ingredients: ['Kidney Beans', 'Black Beans', 'Pinto Beans', 'Diced Tomatoes', 'Chili Powder', 'Cumin', 'Onion', 'Bell Pepper'],
+      category: 'Main Dish',
+    },
+    {
+      id: 5,
+      title: 'Beef Tacos',
+      description: 'Classic beef tacos with seasoned ground beef, lettuce, cheese, and salsa.',
+      ingredients: ['Ground Beef', 'Taco Seasoning', 'Taco Shells', 'Lettuce', 'Cheddar Cheese', 'Salsa'],
+      category: 'Mexican',
     },
   ],
+  favorites: [],
+  recommendations: [],
   searchTerm: '',
   filteredRecipes: [],
 
@@ -45,7 +69,7 @@ const useRecipeStore = create((set, get) => ({
 
   addRecipe: (newRecipe) => set(state => {
     const newRecipes = [...state.recipes, { ...newRecipe, id: crypto.randomUUID() }];
-    // Re-filter after adding a new recipe
+    // Re-filter the recipes after adding
     const filteredRecipes = newRecipes.filter(recipe =>
       recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
     );
@@ -60,7 +84,7 @@ const useRecipeStore = create((set, get) => ({
       const newRecipes = state.recipes.map(recipe =>
         recipe.id === updatedRecipe.id ? updatedRecipe : recipe
       );
-      // Re-filter after updating a recipe
+      // Re-filter the recipes after updating
       const filteredRecipes = newRecipes.filter(recipe =>
         recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
       );
@@ -69,24 +93,85 @@ const useRecipeStore = create((set, get) => ({
         filteredRecipes: filteredRecipes
       };
     }),
+  
   deleteRecipe: (recipeId) =>
     set(state => {
       const newRecipes = state.recipes.filter(recipe => recipe.id !== recipeId);
-      // Re-filter after deleting a recipe
+      // Remove the recipe from favorites if it was favorited
+      const newFavorites = state.favorites.filter(id => id !== recipeId);
+      // Re-filter the recipes after deleting
       const filteredRecipes = newRecipes.filter(recipe =>
         recipe.title.toLowerCase().includes(state.searchTerm.toLowerCase())
       );
       return {
         recipes: newRecipes,
-        filteredRecipes: filteredRecipes
+        filteredRecipes: filteredRecipes,
+        favorites: newFavorites
       };
     }),
+
+  // Action to toggle a recipe's favorite status
+  toggleFavorite: (recipeId) => set(state => {
+    const isFavorite = state.favorites.includes(recipeId);
+    if (isFavorite) {
+      return { favorites: state.favorites.filter(id => id !== recipeId) };
+    } else {
+      return { favorites: [...state.favorites, recipeId] };
+    }
+  }),
+
+  // Action to generate recommendations based on favorites
+  generateRecommendations: () => set(state => {
+    // Generate recommendations based on the category of the favorite recipes.
+    const favoriteCategories = state.favorites.map(id => {
+      const favoriteRecipe = state.recipes.find(recipe => recipe.id === id);
+      return favoriteRecipe ? favoriteRecipe.category : null;
+    }).filter(Boolean);
+
+    // Get a set of unique categories to avoid duplicates
+    const uniqueCategories = [...new Set(favoriteCategories)];
+
+    // Filter recipes that match the favorite categories and are not already a favorite
+    const recommendedRecipes = state.recipes.filter(recipe =>
+      uniqueCategories.includes(recipe.category) && !state.favorites.includes(recipe.id)
+    );
+
+    return { recommendations: recommendedRecipes };
+  }),
 }));
 
-// Initialize filtered recipes on store creation
+// Initialize filtered recipes and recommendations on store creation
 useRecipeStore.getState().filterRecipes();
+useRecipeStore.getState().generateRecommendations();
 
-// --- Helper Component: Add Recipe Form ---
+// --- Confirmation Modal Component ---
+// This component provides a confirmation pop-up for user actions.
+const ConfirmationModal = ({ message, onConfirm, onCancel }) => {
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
+      <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm mx-auto">
+        <h3 className="text-lg font-bold text-gray-900 mb-4">{message}</h3>
+        <div className="flex justify-end space-x-4">
+          <button
+            onClick={onCancel}
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg font-bold hover:bg-gray-400 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-2 bg-red-500 text-white rounded-lg font-bold hover:bg-red-600 transition-colors"
+          >
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- Add Recipe Form Component ---
+// This component handles adding new recipes.
 const AddRecipeForm = () => {
   const addRecipe = useRecipeStore(state => state.addRecipe);
   const [title, setTitle] = useState('');
@@ -126,114 +211,124 @@ const AddRecipeForm = () => {
   );
 };
 
-// --- Helper Component: Confirmation Modal ---
-const ConfirmationModal = ({ message, onConfirm, onCancel }) => {
+// --- Recipe List Component ---
+// This component displays a list of all recipes.
+const RecipeList = () => {
+  const filteredRecipes = useRecipeStore(state => state.filteredRecipes);
+
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-      <div className="bg-white p-8 rounded-lg shadow-xl max-w-sm w-full mx-4">
-        <p className="text-center text-lg mb-6">{message}</p>
-        <div className="flex justify-center space-x-4">
-          <button
-            onClick={onCancel}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onConfirm}
-            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
+    <div className="p-6 bg-white rounded-xl shadow-lg space-y-4">
+      <h2 className="text-2xl font-bold text-gray-800">All Recipes</h2>
+      {filteredRecipes.length > 0 ? (
+        filteredRecipes.map(recipe => (
+          <div key={recipe.id} className="p-4 bg-gray-100 rounded-lg transition-transform hover:scale-105">
+            <Link to={`/recipes/${recipe.id}`} className="text-blue-600 hover:underline">
+              <h3 className="text-xl font-semibold">{recipe.title}</h3>
+              <p className="text-gray-600 text-sm mt-1">{recipe.description.substring(0, 100)}...</p>
+            </Link>
+          </div>
+        ))
+      ) : (
+        <p className="text-center text-gray-500">No recipes found. Try adding a new one!</p>
+      )}
     </div>
   );
 };
 
-// --- New Component: SearchBar ---
+// --- Search Bar Component ---
+// This component provides a search input to filter recipes.
 const SearchBar = () => {
   const searchTerm = useRecipeStore(state => state.searchTerm);
   const setSearchTerm = useRecipeStore(state => state.setSearchTerm);
+
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
+    <div className="p-4 bg-gray-100 rounded-lg shadow-inner">
       <input
         type="text"
+        placeholder="Search for recipes..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Search recipes..."
         className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
       />
     </div>
   );
 };
 
-// --- Recipe List Component (Step 2) ---
-// Displays a list of recipes with links to view and edit.
-const RecipeList = () => {
-  const filteredRecipes = useRecipeStore(state => state.filteredRecipes);
-  const deleteRecipe = useRecipeStore(state => state.deleteRecipe);
-  const [showModal, setShowModal] = useState(false);
-  const [recipeToDelete, setRecipeToDelete] = useState(null);
+// --- Favorites List Component ---
+// This component displays a list of the user's favorite recipes.
+const FavoritesList = () => {
+  const favorites = useRecipeStore(state => state.favorites.map(id =>
+    state.recipes.find(recipe => recipe.id === id)
+  ).filter(Boolean)); // Filter out any undefined recipes
 
-  const handleDeleteClick = (recipeId) => {
-    setRecipeToDelete(recipeId);
-    setShowModal(true);
-  };
-
-  const handleConfirmDelete = () => {
-    if (recipeToDelete) {
-      deleteRecipe(recipeToDelete);
-      setRecipeToDelete(null);
-      setShowModal(false);
-    }
-  };
+  const toggleFavorite = useRecipeStore(state => state.toggleFavorite);
 
   return (
-    <>
-      <div className="space-y-4">
-        {filteredRecipes.length > 0 ? (
-          filteredRecipes.map(recipe => (
-            <div key={recipe.id} className="p-4 bg-white rounded-lg shadow-md flex justify-between items-center transition-transform hover:scale-105">
-              <Link to={`/recipes/${recipe.id}`} className="text-blue-600 hover:underline">
-                <h3 className="text-xl font-semibold">{recipe.title}</h3>
-                <p className="text-gray-600 text-sm mt-1">{recipe.description.substring(0, 75)}...</p>
-              </Link>
-              <div className="space-x-2">
-                <Link to={`/recipes/${recipe.id}/edit`} className="bg-yellow-500 text-white px-3 py-1 rounded-full text-sm font-medium hover:bg-yellow-600 transition-colors">
-                  Edit
-                </Link>
-                <button
-                  onClick={() => handleDeleteClick(recipe.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium hover:bg-red-600 transition-colors"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-500">No recipes found. Try a different search term or add a new recipe.</p>
-        )}
-      </div>
-      {showModal && (
-        <ConfirmationModal
-          message="Are you sure you want to delete this recipe?"
-          onConfirm={handleConfirmDelete}
-          onCancel={() => setShowModal(false)}
-        />
+    <div className="p-6 bg-white rounded-xl shadow-lg space-y-4">
+      <h2 className="text-2xl font-bold text-gray-800">My Favorites ❤️</h2>
+      {favorites.length > 0 ? (
+        favorites.map(recipe => (
+          <div key={recipe.id} className="p-4 bg-gray-100 rounded-lg flex justify-between items-center transition-transform hover:scale-105">
+            <Link to={`/recipes/${recipe.id}`} className="flex-1 text-blue-600 hover:underline">
+              <h3 className="text-xl font-semibold">{recipe.title}</h3>
+            </Link>
+            <button
+              onClick={() => toggleFavorite(recipe.id)}
+              className="px-4 py-2 bg-red-500 text-white rounded-full text-sm font-medium hover:bg-red-600 transition-colors"
+            >
+              Remove
+            </button>
+          </div>
+        ))
+      ) : (
+        <p className="text-center text-gray-500">You haven't favorited any recipes yet!</p>
       )}
-    </>
+    </div>
+  );
+};
+
+// --- Recommendations List Component ---
+// This component shows personalized recipe recommendations.
+const RecommendationsList = () => {
+  const recommendations = useRecipeStore(state => state.recommendations);
+  const generateRecommendations = useRecipeStore(state => state.generateRecommendations);
+
+  return (
+    <div className="p-6 bg-white rounded-xl shadow-lg space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-800">For You ✨</h2>
+        <button
+          onClick={generateRecommendations}
+          className="px-4 py-2 bg-purple-500 text-white rounded-full text-sm font-medium hover:bg-purple-600 transition-colors"
+        >
+          Refresh
+        </button>
+      </div>
+      {recommendations.length > 0 ? (
+        recommendations.map(recipe => (
+          <div key={recipe.id} className="p-4 bg-gray-100 rounded-lg transition-transform hover:scale-105">
+            <Link to={`/recipes/${recipe.id}`} className="text-blue-600 hover:underline">
+              <h3 className="text-xl font-semibold">{recipe.title}</h3>
+              <p className="text-gray-600 text-sm mt-1">{recipe.description.substring(0, 75)}...</p>
+            </Link>
+          </div>
+        ))
+      ) : (
+        <p className="text-center text-gray-500">Favorite some recipes to get recommendations!</p>
+      )}
+    </div>
   );
 };
 
 // --- Recipe Details Component ---
+// This component displays the details of a single recipe and includes the Favorite button.
 const RecipeDetails = () => {
   const { id } = useParams();
-  // We use parseInt(id) for number-based IDs, or fallback to the string ID if it's a UUID.
   const recipe = useRecipeStore(state =>
     state.recipes.find(r => r.id === parseInt(id) || r.id === id)
   );
+  const isFavorite = useRecipeStore(state => state.favorites.includes(recipe?.id));
+  const toggleFavorite = useRecipeStore(state => state.toggleFavorite);
   const navigate = useNavigate();
   const deleteRecipe = useRecipeStore(state => state.deleteRecipe);
   const [showModal, setShowModal] = useState(false);
@@ -252,11 +347,27 @@ const RecipeDetails = () => {
     navigate('/');
   };
 
+  const handleToggleFavorite = () => {
+    toggleFavorite(recipe.id);
+  };
+
   return (
     <>
       <div className="p-8 bg-white rounded-xl shadow-2xl max-w-2xl mx-auto">
         <h1 className="text-4xl font-extrabold text-gray-900 mb-2">{recipe.title}</h1>
         <p className="text-lg text-gray-600 mb-4">{recipe.description}</p>
+        <div className="flex items-center space-x-2 mb-4">
+          <button
+            onClick={handleToggleFavorite}
+            className={`px-4 py-2 rounded-full font-bold transition-colors ${
+              isFavorite
+                ? 'bg-red-500 text-white hover:bg-red-600'
+                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+            }`}
+          >
+            {isFavorite ? 'Unfavorite ❤️' : 'Favorite ♡'}
+          </button>
+        </div>
         {recipe.ingredients && (
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <h2 className="text-2xl font-bold mb-2 text-gray-800">Ingredients</h2>
@@ -300,6 +411,7 @@ const RecipeDetails = () => {
 };
 
 // --- Edit Recipe Form Component ---
+// This component allows users to edit an existing recipe.
 const EditRecipeForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -314,7 +426,7 @@ const EditRecipeForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!title || !description || !recipeToEdit) return;
-    updateRecipe({ id: recipeToEdit.id, title, description });
+    updateRecipe({ ...recipeToEdit, title, description });
     navigate(`/recipes/${recipeToEdit.id}`);
   };
 
@@ -356,7 +468,7 @@ const EditRecipeForm = () => {
   );
 };
 
-// --- Main App Component (Step 3) ---
+// --- Main App Component ---
 const App = () => {
   return (
     <Router>
@@ -375,6 +487,10 @@ const App = () => {
                 <div className="max-w-4xl mx-auto space-y-8">
                   <AddRecipeForm />
                   <SearchBar />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <FavoritesList />
+                    <RecommendationsList />
+                  </div>
                   <RecipeList />
                 </div>
               }
