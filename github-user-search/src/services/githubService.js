@@ -29,7 +29,7 @@ export const searchUsers = async (username, location, minRepos, page = 1) => {
 
     // Make the API request to GitHub.
     const response = await axios.get(
-      `${GITHUB_API_URL}/search/users?q=${searchQuery}&per_page=10&page=${page}`
+      `${GITHUB_API_URL}${searchQuery}&per_page=10&page=${page}`
     );
 
     return response.data;
