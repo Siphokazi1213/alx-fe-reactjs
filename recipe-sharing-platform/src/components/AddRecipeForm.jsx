@@ -37,9 +37,9 @@ const AddRecipeForm = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 md:p-8">
       <h1 className="text-4xl font-bold text-center my-8">Add a New Recipe</h1>
-      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-xl max-w-2xl mx-auto">
+      <form onSubmit={handleSubmit} className="bg-white p-6 md:p-10 rounded-lg shadow-xl max-w-lg md:max-w-xl mx-auto">
         <div className="mb-4">
           <label htmlFor="title" className="block text-gray-700 font-bold mb-2">Recipe Title</label>
           <input
