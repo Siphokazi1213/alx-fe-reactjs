@@ -3,24 +3,91 @@
     "id": 1,
     "title": "Spaghetti Carbonara",
     "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper.",
-    "image": "https://images.unsplash.com/photo-1621949174154-15494d930268?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTc5NDZ8MHwxfHNlYXJjaHwxfHxTcGFnaGV0dGklMjBDYXJib25hcmF8ZW58MHx8fHwxNjcwMzA5OTM4&ixlib=rb-4.0.3&q=80&w=400"
+    "image": "https://images.unsplash.com/photo-1621949174154-15494d930268?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTc5NDZ8MHwxfHNlYXJjaHwxfHxTcGFnaGV0dGklMjBDYXJib25hcmF8ZW58MHx8fHwxNjcwMzA5OTM4&ixlib=rb-4.0.3&q=80&w=400",
+    "ingredients": [
+      "200g spaghetti",
+      "100g guanciale or pancetta",
+      "2 large eggs",
+      "50g Pecorino Romano cheese",
+      "Black pepper"
+    ],
+    "instructions": [
+      "Cook spaghetti in salted water until al dente.",
+      "While spaghetti cooks, chop guanciale and fry in a pan until crisp.",
+      "In a bowl, beat eggs with Pecorino Romano and black pepper.",
+      "Drain spaghetti, reserving some pasta water.",
+      "Toss spaghetti with the egg mixture and guanciale off the heat. Add a splash of pasta water to create a creamy sauce.",
+      "Serve immediately, topped with more cheese and black pepper."
+    ]
   },
   {
     "id": 2,
     "title": "Chicken Tikka Masala",
     "summary": "Chunks of grilled chicken cooked in a smooth, buttery & creamy tomato-based gravy.",
-    "image": "https://images.unsplash.com/photo-1589302168936-e8208915e7f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTc5NDZ8MHwxfHNlYXJjaHwxfHxDaGlja2VuJTIwVGlra2ElMjBNYXNhbGF8ZW58MHx8fHwxNjcwMzEwMDA3&ixlib=rb-4.0.3&q=80&w=400"
+    "image": "https://images.unsplash.com/photo-1589302168936-e8208915e7f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTc5NDZ8MHwxfHNlYXJjaHwxfHxDaGlja2VuJTIwVGlra2ElMjBNYXNhbGF8ZW58MHx8fHwxNjcwMzEwMDA3&ixlib=rb-4.0.3&q=80&w=400",
+    "ingredients": [
+      "500g chicken breast, cubed",
+      "1 cup plain yogurt",
+      "1 tsp ginger-garlic paste",
+      "1 tsp turmeric powder",
+      "1 tsp garam masala",
+      "1 cup tomato puree",
+      "1/2 cup heavy cream"
+    ],
+    "instructions": [
+      "Marinate chicken in yogurt, ginger-garlic paste, and spices for at least 1 hour.",
+      "Grill or pan-fry the chicken until cooked through.",
+      "In a separate pot, sauté onions and garlic, then add tomato puree and spices.",
+      "Simmer the sauce, then stir in heavy cream.",
+      "Add the cooked chicken and simmer for 10-15 minutes.",
+      "Serve hot with rice or naan bread."
+    ]
   },
   {
     "id": 3,
     "title": "Beef Tacos",
     "summary": "Delicious tacos with seasoned ground beef, fresh vegetables, and a squeeze of lime.",
-    "image": "https://images.unsplash.com/photo-1549071599-cc27339d20c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTc5NDZ8MHwxfHNlYXJjaHwxfHxCZWVmJTIwVGFjb3N8ZW58MHx8fHwxNjcwMzEwMTE2&ixlib=rb-4.0.3&q=80&w=400"
+    "image": "https://images.unsplash.com/photo-1549071599-cc27339d20c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTc5NDZ8MHwxfHNlYXJjaHwxfHxCZWVmJTIwVGFjb3N8ZW58MHx8fHwxNjcwMzEwMTE2&ixlib=rb-4.0.3&q=80&w=400",
+    "ingredients": [
+      "500g ground beef",
+      "1 pack taco seasoning",
+      "1 cup water",
+      "8-10 taco shells",
+      "Shredded lettuce",
+      "Diced tomatoes",
+      "Shredded cheese"
+    ],
+    "instructions": [
+      "Brown the ground beef in a skillet over medium-high heat. Drain excess fat.",
+      "Stir in taco seasoning and water. Bring to a boil, then reduce heat and simmer for 10 minutes.",
+      "Warm the taco shells according to package instructions.",
+      "Fill each taco shell with the seasoned beef.",
+      "Top with lettuce, tomatoes, cheese, and other desired toppings.",
+      "Serve with salsa and sour cream."
+    ]
   },
   {
     "id": 4,
     "title": "Classic Pancakes",
     "summary": "Fluffy golden pancakes perfect for a classic breakfast.",
-    "image": "https://images.unsplash.com/photo-1576402187870-165f1712a32c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTc5NDZ8MHwxfHNlYXJjaHwxfHxDbGFzc2ljJTIwUGFuY2FrZXN8ZW58MHx8fHwxNjcwMzEwMTQ1&ixlib=rb-4.0.3&q=80&w=400"
+    "image": "https://images.unsplash.com/photo-1576402187870-165f1712a32c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNTc5NDZ8MHwxfHNlYXJjaHwxfHxDbGFzc2ljJTIwUGFuY2FrZXN8ZW58MHx8fHwxNjcwMzEwMTQ1&ixlib=rb-4.0.3&q=80&w=400",
+    "ingredients": [
+      "1 1/2 cups all-purpose flour",
+      "3 1/2 tsp baking powder",
+      "1 tsp salt",
+      "1 tbsp white sugar",
+      "1 1/4 cups milk",
+      "1 egg",
+      "3 tbsp melted butter"
+    ],
+    "instructions": [
+      "In a large bowl, sift together flour, baking powder, salt, and sugar.",
+      "In a separate bowl, whisk together milk, egg, and melted butter.",
+      "Pour the wet ingredients into the dry ingredients and whisk until just combined. Do not overmix.",
+      "Heat a lightly oiled griddle or frying pan over medium-high heat.",
+      "Pour about 1/4 cup of batter per pancake. Cook until bubbles form on the surface and the edges are dry.",
+      "Flip and cook until browned on the other side.",
+      "Serve warm with butter and maple syrup."
+    ]
   }
 ]
