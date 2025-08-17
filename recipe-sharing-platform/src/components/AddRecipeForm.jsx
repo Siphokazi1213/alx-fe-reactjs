@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
 
-const AddRecipeForm = () => {   
-const [validationError, setValidationError] = useState(''); 
+const AddRecipeForm = () => {
   const [title, setTitle] = useState('');
   const [summary, setSummary] = useState('');
   const [image, setImage] = useState('');
   const [ingredients, setIngredients] = useState('');
-  const [instructions, setInstructions] = useState('');
+  const [steps, setSteps] = useState(''); // Corrected state name
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // This is where you would handle form submission, e.g., to an API
-    if (!title.trim() || !summary.trim() || !ingredients.trim() || !instructions.trim()) {
-    setValidationError('Please fill out all required fields.');
-    return; // Stop form submission
-  }
-    console.log('Form submitted:', { title, summary, image, ingredients, instructions });
+    
+    // Validation checks
+    if (!title.trim() || !summary.trim() || !ingredients.trim() || !steps.trim()) { // Corrected
+      setValidationError('Please fill out all required fields.');
+      return;
+    }
+    
+    // Clear any previous validation errors
+    setValidationError('');
+
+    console.log('Form submitted:', { title, summary, image, ingredients, steps }); // Corrected
   };
 
   return (
@@ -71,22 +75,16 @@ const [validationError, setValidationError] = useState('');
         </div>
         
         <div className="mb-4">
-          <label htmlFor="instructions" className="block text-gray-700 font-bold mb-2">Preparation Steps</label>
+          <label htmlFor="steps" className="block text-gray-700 font-bold mb-2">Preparation Steps</label>
           <textarea
-            id="instructions"
-            value={instructions}
-            onChange={(e) => setInstructions(e.target.value)}
+            id="steps" // Corrected
+            value={steps} // Corrected
+            onChange={(e) => setSteps(e.target.value)} // Corrected
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="7"
             placeholder="List each step on a new line"
           ></textarea>
         </div>
-        
-        {validationError && (
-  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4" role="alert">
-    <span className="block sm:inline">{validationError}</span>
-  </div>
-)}
         
         <button
           type="submit"
