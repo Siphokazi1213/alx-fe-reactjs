@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import recipesData from '../data.json';
 
 const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    // In a real application, you would fetch data from an API here.
-    // For this activity, we import it directly.
     setRecipes(recipesData);
   }, []);
 
@@ -28,12 +27,12 @@ const HomePage = () => {
               <h2 className="text-2xl font-semibold text-gray-800">{recipe.title}</h2>
               <p className="mt-2 text-gray-600 line-clamp-3">{recipe.summary}</p>
               <div className="mt-4">
-                <a
-                  href={`/recipe/${recipe.id}`} // Placeholder for detailed view link
+                <Link
+                  to={`/recipe/${recipe.id}`} // Use Link for internal navigation
                   className="inline-block bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600 transition-colors"
                 >
                   View Recipe
-                </a>
+                </Link>
               </div>
             </div>
           </div>
