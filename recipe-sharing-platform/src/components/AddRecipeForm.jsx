@@ -5,21 +5,35 @@ const AddRecipeForm = () => {
   const [summary, setSummary] = useState('');
   const [image, setImage] = useState('');
   const [ingredients, setIngredients] = useState('');
-  const [steps, setSteps] = useState(''); // Corrected state name
+  const [steps, setSteps] = useState('');
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+    if (!title.trim()) {
+      newErrors.title = 'Recipe title is required.';
+    }
+    if (!summary.trim()) {
+      newErrors.summary = 'Recipe summary is required.';
+    }
+    if (!ingredients.trim()) {
+      newErrors.ingredients = 'Ingredients list is required.';
+    }
+    if (!steps.trim()) {
+      newErrors.steps = 'Preparation steps are required.';
+    }
+    return newErrors;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Validation checks
-    if (!title.trim() || !summary.trim() || !ingredients.trim() || !steps.trim()) { // Corrected
-      setValidationError('Please fill out all required fields.');
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
-    
-    // Clear any previous validation errors
-    setValidationError('');
-
-    console.log('Form submitted:', { title, summary, image, ingredients, steps }); // Corrected
+    setErrors({});
+    console.log('Form submitted:', { title, summary, image, ingredients, steps });
   };
 
   return (
@@ -36,6 +50,7 @@ const AddRecipeForm = () => {
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="e.g., Spaghetti Carbonara"
           />
+          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
         </div>
 
         <div className="mb-4">
@@ -48,6 +63,7 @@ const AddRecipeForm = () => {
             rows="3"
             placeholder="e.g., A classic Italian dish with eggs, cheese, and bacon."
           ></textarea>
+          {errors.summary && <p className="text-red-500 text-sm mt-1">{errors.summary}</p>}
         </div>
 
         <div className="mb-4">
@@ -72,18 +88,20 @@ const AddRecipeForm = () => {
             rows="5"
             placeholder="List each ingredient on a new line"
           ></textarea>
+          {errors.ingredients && <p className="text-red-500 text-sm mt-1">{errors.ingredients}</p>}
         </div>
         
         <div className="mb-4">
           <label htmlFor="steps" className="block text-gray-700 font-bold mb-2">Preparation Steps</label>
           <textarea
-            id="steps" // Corrected
-            value={steps} // Corrected
-            onChange={(e) => setSteps(e.target.value)} // Corrected
+            id="steps"
+            value={steps}
+            onChange={(e) => setSteps(e.target.value)}
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="7"
             placeholder="List each step on a new line"
           ></textarea>
+          {errors.steps && <p className="text-red-500 text-sm mt-1">{errors.steps}</p>}
         </div>
         
         <button
