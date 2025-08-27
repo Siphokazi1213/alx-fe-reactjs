@@ -1,97 +1,85 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const RegistrationForm = () => {
-  // State variables for form inputs
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+  const [message, setMessage] = useState('');
 
-  // Handle form submission
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSuccessMessage('');
-    const newErrors = {};
 
-    // Basic validation logic
-    if (!username.trim()) {
-      newErrors.username = 'Username is required.';
-    }
-    if (!email.trim()) {
-      newErrors.email = 'Email is required.';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Email is invalid.';
-    }
-    if (!password.trim()) {
-      newErrors.password = 'Password is required.';
+    // Simple validation
+    if (!formData.username || !formData.email || !formData.password) {
+      setMessage('All fields are required.');
+      return;
     }
 
-    setErrors(newErrors);
+    // Simulate API call (replace with your actual API endpoint)
+    // Here we're just logging the data for now.
+    console.log('Submitting form data:', formData);
+    setMessage('Registration successful!');
 
-    // If there are no errors, submit the form (mock API call)
-    if (Object.keys(newErrors).length === 0) {
-      console.log('Submitting with controlled components:', { username, email, password });
-      // Mock API call to simulate user registration
-      setTimeout(() => {
-        setSuccessMessage('Registration successful!');
-        // Clear form after submission
-        setUsername('');
-        setEmail('');
-        setPassword('');
-      }, 1000);
-    }
+    // Reset form fields
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+    });
   };
 
   return (
-    <div className="flex justify-center items-center p-4 min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">User Registration (Controlled)</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-700 text-sm font-semibold mb-2">Username</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
-          </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700 text-sm font-semibold mb-2">Email</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-          </div>
-          <div className="mb-6">
-            <label htmlFor="password" className="block text-gray-700 text-sm font-semibold mb-2">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white font-semibold py-2 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Register
-          </button>
-          {successMessage && (
-            <p className="text-green-500 text-center mt-4">{successMessage}</p>
-          )}
-        </form>
-      </div>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-bold mb-4">Registration Form</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Username</label>
+          <input
+            type="text"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          />
+        </div>
+        <button
+          type="submit"
+          className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+        >
+          Register
+        </button>
+      </form>
+      {message && <p className="mt-4 text-center text-red-500">{message}</p>}
     </div>
   );
 };
