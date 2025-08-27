@@ -1,41 +1,30 @@
 import { useState } from 'react';
 
 const RegistrationForm = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-  });
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Simple validation
-    if (!formData.username || !formData.email || !formData.password) {
+    // Basic validation logic
+    if (!username || !email || !password) {
       setMessage('All fields are required.');
       return;
     }
 
-    // Simulate API call (replace with your actual API endpoint)
-    // Here we're just logging the data for now.
-    console.log('Submitting form data:', formData);
+    // You can add more complex validation here, e.g., for email format or password strength.
+    // For now, we'll just log the data and clear the form on success.
+
+    console.log('Form submitted:', { username, email, password });
     setMessage('Registration successful!');
 
-    // Reset form fields
-    setFormData({
-      username: '',
-      email: '',
-      password: '',
-    });
+    // Reset the form fields
+    setUsername('');
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -43,32 +32,32 @@ const RegistrationForm = () => {
       <h2 className="text-2xl font-bold mb-4">Registration Form</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Username</label>
+          <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
           <input
+            id="username"
             type="text"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
           <input
+            id="email"
             type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
           <input
+            id="password"
             type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
         </div>
