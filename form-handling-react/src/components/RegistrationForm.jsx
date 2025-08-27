@@ -4,14 +4,28 @@ const RegistrationForm = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
   const [message, setMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const newErrors = {};
+    if (!username) {
+      newErrors.username = 'Username is required.';
+    }
+    if (!email) {
+      newErrors.email = 'Email is required.';
+    }
+    if (!password) {
+      newErrors.password = 'Password is required.';
+    }
+
+    setErrors(newErrors);
+
     // Basic validation logic
-    if (!username || !email || !password) {
-      setMessage('All fields are required.');
+    if (Object.keys(newErrors).length > 0) {
+      setMessage('');
       return;
     }
 
@@ -40,6 +54,7 @@ const RegistrationForm = () => {
             onChange={(e) => setUsername(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
+          {errors.username && <p className="mt-1 text-xs text-red-500">{errors.username}</p>}
         </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -50,6 +65,7 @@ const RegistrationForm = () => {
             onChange={(e) => setEmail(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
+          {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
         </div>
         <div>
           <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
@@ -60,6 +76,7 @@ const RegistrationForm = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
+          {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
         </div>
         <button
           type="submit"
@@ -68,7 +85,7 @@ const RegistrationForm = () => {
           Register
         </button>
       </form>
-      {message && <p className="mt-4 text-center text-red-500">{message}</p>}
+      {message && <p className="mt-4 text-center text-green-500">{message}</p>}
     </div>
   );
 };
