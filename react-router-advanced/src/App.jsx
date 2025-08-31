@@ -2,14 +2,15 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useState } from 'react';
 import Home from './pages/Home';
 import About from './pages/About';
-import Profile from './pages/Profile';
-import ProfileDetails from './pages/ProfileDetails';
-import ProfileSettings from './pages/ProfileSettings';
 import Post from './pages/Post';
 import Dashboard from './pages/Dashboard';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
+import Profile from './components/Profile';
+import ProfileDetails from './components/ProfileDetails';
+import ProfileSettings from './components/ProfileSettings';
 import './index.css';
+
 
 const App = () => {
   const [isAuthenticated, setAuthenticated] = useState(false);
